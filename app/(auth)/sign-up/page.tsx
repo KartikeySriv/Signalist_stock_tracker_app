@@ -32,15 +32,23 @@ const SignUp = () => {
         setAuthError(null)
         try {
             const result = await signUpWithEmail(data);
-            if (result.success) return router.push("/");
+            
+            // Check if signup was successful
+            if (result && result.success) {
+                // Success - redirect to home page
+                router.push("/");
+                return;
+            }
 
             // If the API returned a failure, show inline message under password
-            setAuthError(result.error || result.message || 'Email and password are wrong')
+            const errorMessage = result?.error || result?.message || 'Failed to create account. Please try again.'
+            setAuthError(errorMessage)
+            toast.error('Sign up failed', { description: errorMessage })
         } catch (e) {
-            console.error(e);
+            console.error('Sign up form error:', e);
             const msg = e instanceof Error ? e.message : 'Failed to create an account.'
             toast.error('Sign up failed', { description: msg })
-            setAuthError('Email and password are wrong')
+            setAuthError(msg)
         }
     }
     return (<>
