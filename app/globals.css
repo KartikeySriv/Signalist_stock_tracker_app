@@ -137,7 +137,10 @@
         @apply border-border outline-ring/50;
     }
     body {
-        @apply bg-gray-900 text-foreground;
+        @apply bg-gray-900 text-foreground overflow-x-hidden;
+    }
+    html {
+        overflow-x: hidden;
     }
 }
 
@@ -149,10 +152,10 @@
         @apply h-12 cursor-pointer bg-gradient-to-b from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-400 text-gray-950 font-medium text-base rounded-lg shadow-lg disabled:opacity-50;
     }
     .home-wrapper {
-        @apply text-gray-400 flex-col gap-4 md:gap-10 items-center sm:items-start;
+        @apply text-gray-400 flex-col gap-4 md:gap-10 items-center sm:items-start overflow-x-hidden;
     }
     .home-section {
-        @apply w-full gap-8 grid-cols-1 md:grid-cols-2 xl:grid-cols-3;
+        @apply w-full gap-6 md:gap-6 xl:gap-6 grid-cols-1 md:grid-cols-2 xl:grid-cols-3;
     }
     .header {
         @apply z-50 w-full h-[70px] bg-gray-800;
@@ -448,6 +451,22 @@
 .tradingview-widget-container iframe {
     background-color: #141414 !important;
     width: 100% !important;
+    max-width: 100% !important;
+}
+
+.tradingview-widget-container {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Ensure heatmap widget fits properly with visible borders */
+.home-section > div {
+    overflow: hidden;
+}
+
+.home-section .tradingview-widget-container {
+    width: 100% !important;
+    box-sizing: border-box !important;
 }
 
 .custom-chart.tradingview-widget-container iframe {

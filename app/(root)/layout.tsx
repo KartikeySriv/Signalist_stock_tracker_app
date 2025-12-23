@@ -15,9 +15,9 @@ const Layout = async ({children}: { children: React.ReactNode }) => {
         email: session?.user?.email,
     }
     return (
-        <main className="min-h-screen text-gray-400">
+        <main className="min-h-screen text-gray-400 overflow-x-hidden">
             <Header user={user}/>
-            <div className="container py-10">
+            <div className="container py-10 max-w-full">
                 {children}
             </div>
         </main>

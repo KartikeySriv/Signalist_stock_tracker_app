@@ -5,9 +5,9 @@ import {
 
 const Home = () => {
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`
-    return (<div className="flex min-h-screen home-wrapper">
-            <section className="grid w-full gap-8 home-section">
-                <div className="md:col-span-1 xl:col-span-1">
+    return (<div className="flex min-h-screen home-wrapper w-full max-w-full">
+            <section className="grid w-full max-w-full home-section">
+                <div className="md:col-span-1 xl:col-span-1 min-w-0">
                     <TradingViewWidget
                         title="Market Overview"
                         scriptUrl={`${scriptUrl}market-overview.js`}
@@ -16,7 +16,7 @@ const Home = () => {
                         className="custom-chart"
                     />
                 </div>
-                <div className="md:col-span-1 xl:col-span-2">
+                <div className="md:col-span-1 xl:col-span-2 min-w-0">
                     <TradingViewWidget
                         title="Stock Heatmap"
                         scriptUrl={`${scriptUrl}stock-heatmap.js`}
@@ -26,8 +26,8 @@ const Home = () => {
 
                 </div>
             </section>
-            <section className="grid w-full gap-8 home-section">
-                <div className="h-full md:col-span-1 xl:col-span-1">
+            <section className="grid w-full max-w-full home-section">
+                <div className="h-full md:col-span-1 xl:col-span-1 min-w-0">
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}timeline.js`}
                         config={TOP_STORIES_WIDGET_CONFIG}
@@ -35,7 +35,7 @@ const Home = () => {
                         className="custom-chart"
                     />
                 </div>
-                <div className="h-full md:col-span-1 xl:col-span-2">
+                <div className="h-full md:col-span-1 xl:col-span-2 min-w-0">
                     <TradingViewWidget
                         scriptUrl={`${scriptUrl}market-quotes.js`}
                         config={MARKET_DATA_WIDGET_CONFIG}
