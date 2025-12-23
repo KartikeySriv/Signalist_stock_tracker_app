@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react'
+import React, {useState} from 'react'
 import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
@@ -26,15 +26,21 @@ const SignUp = () => {
         }, mode: "onBlur"
     })
 
+    const [authError, setAuthError] = useState<string | null>(null)
+
     const onSubmit = async (data: SignUpFormData) => {
+        setAuthError(null)
         try {
             const result = await signUpWithEmail(data);
-            if (result.success) router.push("/");
+            if (result.success) return router.push("/");
+
+            // If the API returned a failure, show inline message under password
+            setAuthError(result.error || result.message || 'Email and password are wrong')
         } catch (e) {
             console.error(e);
-            toast.error('Sign up failed', {
-                description: e instanceof Error ? e.message : 'Failed to create an account.'
-            })
+            const msg = e instanceof Error ? e.message : 'Failed to create an account.'
+            toast.error('Sign up failed', { description: msg })
+            setAuthError('Email and password are wrong')
         }
     }
     return (<>
@@ -78,6 +84,9 @@ const SignUp = () => {
                 error={errors.password}
                 validation={{required: "Password is required", minLength: 8}}
             />
+            {authError && (
+                <p className="text-sm text-yellow-500">{authError}</p>
+            )}
 
             <SelectField
                 name="investmentGoals"

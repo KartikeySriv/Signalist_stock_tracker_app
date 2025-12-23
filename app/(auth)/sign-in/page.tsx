@@ -8,6 +8,8 @@ import {toast} from "sonner";
 import {useRouter} from "next/navigation";
 import {signInWithEmail} from "@/lib/actions/auth.actions";
 
+import React, {useState} from 'react';
+
 const SignIn = () => {
     const router = useRouter()
     const {
@@ -17,16 +19,20 @@ const SignIn = () => {
             email: '', password: '',
         }, mode: 'onBlur',
     });
+    const [authError, setAuthError] = useState<string | null>(null)
 
     const onSubmit = async (data: SignInFormData) => {
+        setAuthError(null)
         try {
             const result = await signInWithEmail(data)
-            if (result.success) router.push("/")
+            if (result.success) return router.push("/")
+
+            setAuthError(result.error || result.message || 'Invalid email or password')
         } catch (e) {
             console.error(e);
-            toast.error('Sign in failed', {
-                description: e instanceof Error ? e.message : 'Failed to sign in.'
-            })
+            const msg = e instanceof Error ? e.message : 'Failed to sign in.'
+            toast.error('Sign in failed', { description: msg })
+            setAuthError('Invalid email or password')
         }
     }
 
@@ -52,6 +58,10 @@ const SignIn = () => {
                 error={errors.password}
                 validation={{required: 'Password is required', minLength: 8}}
             />
+
+            {authError && (
+                <p className="text-sm text-yellow-500">{authError}</p>
+            )}
 
             <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
                 {isSubmitting ? 'Signing In' : 'Sign In'}

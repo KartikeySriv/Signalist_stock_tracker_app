@@ -37,7 +37,8 @@ export const signInWithEmail = async ({email, password,}: SignInFormData) => {
         return {success: true, data: response}
     } catch (e) {
         console.log('Sign in failed', e)
-        return {success: false, error: 'Sign in failed'}
+        // Return a clear, user-facing message so the frontend can show it inline
+        return {success: false, error: 'Invalid email or password'}
     }
 }
 
