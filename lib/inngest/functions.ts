@@ -46,15 +46,22 @@ export const sendSignUpEmail = inngest.createFunction(
 
     await step.run('send-welcome-email', async () => {
       const part = response.candidates?.[0]?.content?.parts?.[0];
-      const introText =
-        (part && 'text' in part ? part.text : null) ||
-        'Thanks for joining Signalist. You now have the tools to track markets and make smarter moves.';
+      try {
+        const introText =
+          (part && 'text' in part ? part.text : null) ||
+          'Thanks for joining Signalist. You now have the tools to track markets and make smarter moves.';
 
-      const {
-        data: { email, name },
-      } = event;
+        const {
+          data: { email, name },
+        } = event;
 
-      return await sendWelcomeEmail({ email, name, intro: introText });
+        console.log(`📧 Attempting to send welcome email to ${email}...`);
+        await sendWelcomeEmail({ email, name, intro: introText });
+        console.log(`✅ Welcome email sent to ${email}`);
+      } catch (error) {
+        console.error('❌ Error sending welcome email:', error);
+        throw error;
+      }
     });
 
     return {
@@ -128,17 +135,30 @@ export const sendDailyNewsSummary = inngest.createFunction(
 
     // Step 4: Send emails (placeholder)
     await step.run('send-news-emails', async () => {
-      await Promise.all(
-        userNewsSummaries.map(async ({ user, newsContent }) => {
-          if (!newsContent) return false;
+      try {
+        await Promise.all(
+          userNewsSummaries.map(async ({ user, newsContent }) => {
+            if (!newsContent) return false;
 
-          return await sendNewsSummaryEmail({
-            email: user.email,
-            date: getFormattedTodayDate(),
-            newsContent,
-          });
-        })
-      );
+            try {
+              console.log(`📧 Sending news summary to ${user.email}...`);
+              const result = await sendNewsSummaryEmail({
+                email: user.email,
+                date: getFormattedTodayDate(),
+                newsContent,
+              });
+              console.log(`✅ News summary sent to ${user.email}`);
+              return result;
+            } catch (error) {
+              console.error(`❌ Failed to send news to ${user.email}:`, error);
+              throw error;
+            }
+          })
+        );
+      } catch (error) {
+        console.error('❌ Error in send-news-emails step:', error);
+        throw error;
+      }
     });
 
     return {

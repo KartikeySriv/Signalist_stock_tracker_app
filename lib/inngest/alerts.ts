@@ -44,10 +44,19 @@ async function evaluateAndSend(alert: any, email: string) {
     targetPrice: `$${target.toFixed(2)}`,
     timestamp,
   };
-  if (isUpper) {
-    await sendStockAlertUpperEmail(payload);
-  } else {
-    await sendStockAlertLowerEmail(payload);
+  try {
+    if (isUpper) {
+      console.log(`📧 Sending upper alert email to ${email} for ${alert.symbol}`);
+      await sendStockAlertUpperEmail(payload);
+      console.log(`✅ Upper alert email sent to ${email}`);
+    } else {
+      console.log(`📧 Sending lower alert email to ${email} for ${alert.symbol}`);
+      await sendStockAlertLowerEmail(payload);
+      console.log(`✅ Lower alert email sent to ${email}`);
+    }
+  } catch (error) {
+    console.error(`❌ Failed to send alert email to ${email}:`, error);
+    throw error;
   }
 
   // mark as triggered now
